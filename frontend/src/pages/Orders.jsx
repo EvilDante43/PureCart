@@ -1,7 +1,6 @@
 import React, { useContext } from 'react'
-import { ShopContext } from '../Context/ShopContext'
+import { ShopContext } from '../context/ShopContext'
 import Title from '../components/Title';
-import { assets } from '../assets/assets';
 import { useState } from 'react';
 import { useEffect } from 'react';
 import axios from 'axios';
