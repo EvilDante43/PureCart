@@ -64,7 +64,7 @@ const placeOrderStripe = async (req, res) => {
             quantity: item.quantity
         }))
         line_items.push({
-            price_data: { 
+            price_data: {
                 currency: currency,
                 product_data: {
                     name: 'Delivery Charges'
@@ -74,13 +74,13 @@ const placeOrderStripe = async (req, res) => {
             quantity: 1
         })
 
-        const session =await stripe.checkout.sessions.create({
-            success_url:`${origin}/verify?success=true&orderId=${newOrder._id}`,
-            cancel_url:`${origin}/verify?success=false&orderId=${newOrder._id}`,
+        const session = await stripe.checkout.sessions.create({
+            success_url: `${process.env.FRONTEND_URL}/verify?success=true&orderId=${newOrder._id}`,
+            cancel_url: `${process.env.FRONTEND_URL}/verify?success=false&orderId=${newOrder._id}`,
             line_items,
-            mode:'payment',
-        })
-        res.json({success:true,session_url:session.url})
+            mode: "payment",
+        });
+        res.json({ success: true, session_url: session.url })
 
     } catch (error) {
         console.log(error)
@@ -90,15 +90,15 @@ const placeOrderStripe = async (req, res) => {
 
 // Verify Stripe
 const verifyStripe = async (req, res) => {
-    const {orderId, success, userId} = req.body
+    const { orderId, success, userId } = req.body
     try {
-        if(success === "true"){
-            await orderModel.findByIdAndUpdate(orderId, {payment:true});
-            await userModel.findByIdAndUpdate(userId, {cartData: {}})
-            res.json({success:true});
+        if (success === "true") {
+            await orderModel.findByIdAndUpdate(orderId, { payment: true });
+            await userModel.findByIdAndUpdate(userId, { cartData: {} })
+            res.json({ success: true });
         } else {
             await orderModel.findByIdAndDelete(orderId)
-            res.json({success:false})
+            res.json({ success: false })
         }
     } catch (error) {
         console.log(error)
